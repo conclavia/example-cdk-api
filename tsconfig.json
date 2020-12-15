@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node12/tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "inlineSourceMap": true,
+    "outDir": "output/tsc",
+    "strict": true
+  },
+  "exclude": ["node_modules", "output"]
+}
