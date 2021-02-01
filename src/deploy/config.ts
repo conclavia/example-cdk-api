@@ -1,32 +1,89 @@
-function getString(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Environment variable ${name} required by configuration was not set`);
-  }
+/* eslint-disable unicorn/no-null */
 
-  return value;
-}
+import convict from 'convict';
 
-export default {
+convict.addFormat({
+  name: 'comma-separated-string',
+  coerce: (value: string) => (typeof value === 'string' ? (value ?? '').split(',') : value),
+  validate: (value) => {
+    if (!Array.isArray(value)) {
+      throw new TypeError('must be a comma separated string value');
+    }
+  },
+});
+
+const nullString = null as string | null;
+const nullArray = null as string[] | null;
+
+const config = convict({
   database: {
-    tableName: getString('TABLE_NAME'),
+    tableName: {
+      doc: '',
+      env: 'TABLE_NAME',
+      format: 'String',
+      default: nullString,
+    },
   },
   network: {
-    apiCorsAllowedOrigins: getString('API_ALLOWED_CORS_ORIGINS').split(','),
-    apiDomainName: getString('API_DOMAIN_NAME'),
-    hostedZoneName: getString('HOSTED_ZONE_NAME'),
+    apiCorsAllowedOrigins: {
+      doc: '',
+      env: 'API_ALLOWED_CORS_ORIGINS',
+      format: 'comma-separated-string',
+      default: nullArray,
+    },
+    apiDomainName: {
+      doc: '',
+      env: 'API_DOMAIN_NAME',
+      format: 'String',
+      default: nullString,
+    },
+    hostedZoneName: {
+      doc: '',
+      env: 'HOSTED_ZONE_NAME',
+      format: 'String',
+      default: nullString,
+    },
   },
   paths: {
-    package: getString('PACKAGE_DIRECTORY'),
-    tags: getString('TAGS_OUTPUT_FILE'),
+    package: {
+      doc: '',
+      env: 'PACKAGE_DIRECTORY',
+      format: 'String',
+      default: nullString,
+    },
+    tags: {
+      doc: '',
+      env: 'TAGS_OUTPUT_FILE',
+      format: 'String',
+      default: nullString,
+    },
   },
   stackNames: {
-    core: getString('CORE_STACK'),
+    core: {
+      doc: '',
+      env: 'CORE_STACK',
+      format: 'String',
+      default: nullString,
+    },
   },
   stackParameters: {
     env: {
-      account: process.env.CDK_DEFAULT_ACCOUNT,
-      region: process.env.CDK_DEFAULT_REGION,
+      account: {
+        doc: '',
+        env: 'CDK_DEFAULT_ACCOUNT',
+        format: 'String',
+        default: nullString,
+      },
+      region: {
+        doc: '',
+        env: 'CDK_DEFAULT_REGION',
+        format: 'String',
+        default: nullString,
+      },
     },
   },
-};
+});
+
+config.validate({ allowed: 'strict' });
+
+export default config.get();

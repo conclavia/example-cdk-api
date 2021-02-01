@@ -24,6 +24,7 @@
     "@aws-cdk/aws-route53-targets": "^1.78.0",
     "@aws-cdk/core": "^1.78.0",
     "@tsconfig/node12": "^1.0.7",
+    "@types/convict": "^5.2.2",
     "@types/jest": "^26.0.19",
     "@types/node": "^14.14.13",
     "@types/uuid": "^8.3.0",
@@ -58,6 +59,7 @@
   },
   "dependencies": {
     "aws-lambda-fastify": "^1.4.4",
+    "convict": "^6.0.0",
     "fastify": "^3.9.1",
     "fp-ts": "^2.9.1",
     "io-ts": "^2.2.13",
